@@ -1,4 +1,4 @@
-input_text = """forward 4
+forward 4
 down 7
 down 4
 forward 2
@@ -997,4 +997,4 @@ up 7
 up 7
 forward 6
 down 1
-forward 7"""
+forward 7

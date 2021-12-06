@@ -1,9 +1,10 @@
-import data
+with open('./input.txt', 'r') as f:
+    data = f.readlines()
 
 x = 0
 y = 0
 
-for cmd in data.input_text.split("\n"):
+for cmd in data:
     s = cmd.split(" ")
     direction = s[0]
     value = int(s[1])
@@ -18,4 +19,3 @@ for cmd in data.input_text.split("\n"):
 print(f"{x=}")
 print(f"{y=}")
 print(f"res = {x*y}")
-
