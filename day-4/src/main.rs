@@ -12,7 +12,7 @@ fn read_file(path:&str) -> Vec<String>{
 }
 
 fn main() {
-    let data = read_file("../input.txt");
+    let data = read_file("./input.txt");
 
     let numbers: Vec<u32> = data[0].split(',')
     .filter_map(|e| e.parse::<u32>().ok())

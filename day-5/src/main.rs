@@ -13,9 +13,6 @@ fn read_file(path:&str) -> Vec<String>{
 
 fn main() {
     let lines = read_file("./input.txt");
-    for line in &lines{
-        println!("{}",line);
-    }
 
     let mut field: Vec<Vec<u32>> = [].to_vec();
 
@@ -66,32 +63,26 @@ fn main() {
         }
 
         if x2 > x1{
-            println!("s: {:?}",start);
-            println!("e: {:?}",end);
             if y2 > y1{
                 // + +
-                println!("1");
                 for i in 0..x2-x1+1{
                     field[y1+i][x1+i] += 1;
                 }
             }else{
                 // - +
-                println!("2");
                 for i in 0..x2-x1+1{
                     field[y1-i][x1+i] += 1;
                 }
             }
             continue;
-        }else{ // x2 < x1
+        }else{
             if y2 > y1{
                 // + -
-                println!("3");
                 for i in 0..x1-x2+1{
                     field[y1+i][x1-i] += 1;
                 }
             }else{
                 // - -
-                println!("4");
                 for i in 0..x1-x2+1{
                     field[y1-i][x1-i] += 1;
                 }
@@ -101,7 +92,7 @@ fn main() {
 
     }
 
-    print_field(&field);
+    // print_field(&field);
     eval_field(&field);
 }
 

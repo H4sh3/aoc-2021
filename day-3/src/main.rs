@@ -105,7 +105,7 @@ fn part1(numbers: Vec<String>) {
 }
 
 fn main() {
-    let numbers: Vec<String> = read_file("../input.txt");
+    let numbers: Vec<String> = read_file("./input.txt");
     //part1(numbers);
     part2(numbers);
 }
