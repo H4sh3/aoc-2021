@@ -30,37 +30,77 @@ fn main() {
 
     for line in &lines{
         let start_end = line.split(" -> ").collect::<Vec<&str>>();
-        let start = start_end[0].split(",").map(|e| e.parse::<u32>().unwrap()).collect::<Vec<u32>>();
-        let end = start_end[1].split(",").map(|e| e.parse::<u32>().unwrap()).collect::<Vec<u32>>();
-        if start[0] == end[0]{
+        let start = start_end[0].split(",").map(|e| e.parse::<usize>().unwrap()).collect::<Vec<usize>>();
+        let end = start_end[1].split(",").map(|e| e.parse::<usize>().unwrap()).collect::<Vec<usize>>();
+        let x1 = start[0];
+        let y1 = start[1];
+        let x2 = end[0];
+        let y2 = end[1];
+        if x1 == x2{
              // x1 == x2 veritcal
-            let x = start[0];
-            if start[1] < end[1]{
-                for y in start[1]..end[1]+1{
-                    field[y as usize][x as usize] += 1;
+            let x = x1;
+            if y1 < y2{
+                for y in y1..y2+1{
+                    field[y][x] += 1;
                 }
             }else{
-                for y in end[1]..start[1]+1{
-                    field[y as usize][x as usize] += 1;
-                }   
+                for y in y2..y1+1{
+                    field[y][x] += 1;
+                }
             }
+            continue;
         }
 
-        if start[1] == end[1]{
-            let y = start[1];
-            if start[0] < end[0]{
-                println!("1");
-                for x in start[0]..end[0]+1{
-                    field[y as usize][x as usize] += 1;
+        if y1 == y2{
+            let y = y1;
+            if x1 < x2{
+                for x in x1..x2+1{
+                    field[y][x] += 1;
                 }
             }else{
-                println!("1");
-                for x in end[0]..start[0]+1{
-                    field[y as usize][x as usize] += 1;
+                for x in x2..x1+1{
+                    field[y][x] += 1;
                 }   
             }
-        } 
+            continue;
+        }
+
+        if x2 > x1{
+            println!("s: {:?}",start);
+            println!("e: {:?}",end);
+            if y2 > y1{
+                // + +
+                println!("1");
+                for i in 0..x2-x1+1{
+                    field[y1+i][x1+i] += 1;
+                }
+            }else{
+                // - +
+                println!("2");
+                for i in 0..x2-x1+1{
+                    field[y1-i][x1+i] += 1;
+                }
+            }
+            continue;
+        }else{ // x2 < x1
+            if y2 > y1{
+                // + -
+                println!("3");
+                for i in 0..x1-x2+1{
+                    field[y1+i][x1-i] += 1;
+                }
+            }else{
+                // - -
+                println!("4");
+                for i in 0..x1-x2+1{
+                    field[y1-i][x1-i] += 1;
+                }
+            }
+            continue;
+        }
+
     }
+
     print_field(&field);
     eval_field(&field);
 }
