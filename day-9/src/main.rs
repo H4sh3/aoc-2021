@@ -69,7 +69,7 @@ fn part2(){
     for point in points{
         let mut visited_points: Vec<String> = vec![];
         let mut sum: u32 = 0u32;
-        check_recursiv(&matrix,&point,&mut visited_points,&mut sum);
+        check_recursiv(point.x,point.y,&matrix,&mut visited_points,&mut sum);
         sums.push(sum);
     }
 
@@ -77,52 +77,51 @@ fn part2(){
     println!("{}",sums[0]*sums[1]*sums[2]);
 }
 
-fn check_recursiv(matrix: &Vec<Vec<u32>>, point:&Point, visited_points: &mut Vec<String>, sum: &mut u32){
-
+fn check_recursiv(x:usize ,y:usize ,matrix: &Vec<Vec<u32>>, visited_points: &mut Vec<String>, sum: &mut u32){
     let mut above:u32 = 9;
-    if point.y > 0{
-        let ab_string = format!("{}-{}",point.y-1,point.x);
-        above = if visited_points.contains(&ab_string) {9} else {matrix[point.y-1usize][point.x]};
+    if y > 0{
+        let ab_string = format!("{}-{}",y-1,x);
+        above = if visited_points.contains(&ab_string) {9} else {matrix[y-1usize][x]};
         visited_points.push(ab_string);
     }
     if above != 9{
         *sum+=1;
-        check_recursiv(&matrix,&Point{x:point.x,y:point.y-1},visited_points,sum);
+        check_recursiv(x,y-1,&matrix,visited_points,sum);
     }
 
     let mut bellow:u32 = 9;
-    if point.y < matrix.len()-1{
-        let be_string = format!("{}-{}",point.y+1,point.x);
-        bellow = if visited_points.contains(&be_string) {9} else {matrix[point.y+1][point.x]};
+    if y < matrix.len()-1{
+        let be_string = format!("{}-{}",y+1,x);
+        bellow = if visited_points.contains(&be_string) {9} else {matrix[y+1][x]};
         visited_points.push(be_string);
     }
     if bellow != 9{
         *sum+=1;
-        check_recursiv(&matrix,&Point{x:point.x,y:point.y+1},visited_points,sum);
+        check_recursiv(x,y+1,&matrix,visited_points,sum);
     }
 
     let mut left:u32 = 9;
-    if point.x > 0{
-        let le_string = format!("{}-{}",point.y,point.x-1);
-        left = if visited_points.contains(&le_string) {9} else {matrix[point.y][point.x-1]};
+    if x > 0{
+        let le_string = format!("{}-{}",y,x-1);
+        left = if visited_points.contains(&le_string) {9} else {matrix[y][x-1]};
         visited_points.push(le_string);
     }
     
     if left != 9{
         *sum+=1;
-        check_recursiv(&matrix,&Point{x:point.x-1,y:point.y},visited_points,sum);
+        check_recursiv(x-1,y,&matrix,visited_points,sum);
     }
 
     let mut right:u32 = 9;
-    if point.x < matrix[point.y].len()-1{
-        let ri_string = format!("{}-{}",point.y,point.x+1);
-        right = if visited_points.contains(&ri_string) {9} else {matrix[point.y][point.x+1]};
+    if x < matrix[y].len()-1{
+        let ri_string = format!("{}-{}",y,x+1);
+        right = if visited_points.contains(&ri_string) {9} else {matrix[y][x+1]};
         visited_points.push(ri_string);
     }
 
     if right != 9{
         *sum+=1;
-        check_recursiv(&matrix,&Point{x:point.x+1,y:point.y},visited_points,sum);
+        check_recursiv(x+1,y,&matrix,visited_points,sum);
     }
 }
 
