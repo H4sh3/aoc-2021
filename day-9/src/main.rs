@@ -16,7 +16,20 @@ struct Point{
     y:usize
 }
 
-fn get_points(matrix: &Vec<Vec<u32>>) -> Vec<Point>{
+struct MatrixAndPoints{
+    points:Vec<Point>,
+    matrix: Vec<Vec<u32>>
+}
+
+fn part1() -> MatrixAndPoints{
+    let data = read_file("./input.txt");
+    let mut matrix: Vec<Vec<u32>> = vec![];
+
+    for row in data{
+        let arr: Vec<u32> = row.split("").filter(|e| e.len()==1).map(|e| e.parse::<u32>().unwrap()).collect();
+        matrix.push(arr);
+    }
+    
     let mut points:Vec<Point> = vec![];
 
     let mut sum = 0u32;
@@ -36,92 +49,48 @@ fn get_points(matrix: &Vec<Vec<u32>>) -> Vec<Point>{
         }
     }
     
-    println!("sum: {}",&sum);
+    println!("Sum part-1: {}",&sum);
 
-    points
-}
-
-fn part1(){
-    let data = read_file("./input.txt");
-    println!("{}",data.len());
-    let mut matrix: Vec<Vec<u32>> = vec![];
-
-    for row in data{
-        let arr: Vec<u32> = row.split("").filter(|e| e.len()==1).map(|e| e.parse::<u32>().unwrap()).collect();
-        matrix.push(arr);
-    }
-    
-    let _points: Vec<Point> = get_points(&matrix);
+    MatrixAndPoints{points:points,matrix:matrix}
 }
 
 fn part2(){
-    let data = read_file("./input.txt");
-    let mut matrix: Vec<Vec<u32>> = vec![];
-
-    for row in data{
-        let arr: Vec<u32> = row.split("").filter(|e| e.len()==1).map(|e| e.parse::<u32>().unwrap()).collect();
-        matrix.push(arr);
-    }
-
-    let points: Vec<Point> = get_points(&matrix);
+    let output1: MatrixAndPoints = part1();
 
     let mut sums: Vec<u32> = vec![];
-    for point in points{
+    for point in output1.points{
         let mut visited_points: Vec<String> = vec![];
         let mut sum: u32 = 0u32;
-        check_recursiv(point.x,point.y,&matrix,&mut visited_points,&mut sum);
+        check_recursiv(point.x,point.y,&output1.matrix,&mut visited_points,&mut sum);
         sums.push(sum);
     }
 
     sums.sort_by(|a, b| b.cmp(a));
-    println!("{}",sums[0]*sums[1]*sums[2]);
+    println!("Sum part-2: {}",sums[0]*sums[1]*sums[2]);
+}
+
+fn check_point(x:usize ,y:usize ,matrix: &Vec<Vec<u32>>, visited_points: &mut Vec<String>, sum: &mut u32){
+        let point_ident = format!("{}-{}",y,x);
+        let next_node = if visited_points.contains(&point_ident) {9} else {matrix[y][x]};
+        visited_points.push(point_ident);
+        if next_node != 9{
+            *sum+=1;
+            check_recursiv(x,y,&matrix,visited_points,sum);
+        }
 }
 
 fn check_recursiv(x:usize ,y:usize ,matrix: &Vec<Vec<u32>>, visited_points: &mut Vec<String>, sum: &mut u32){
-    let mut above:u32 = 9;
     if y > 0{
-        let ab_string = format!("{}-{}",y-1,x);
-        above = if visited_points.contains(&ab_string) {9} else {matrix[y-1usize][x]};
-        visited_points.push(ab_string);
+        check_point(x,y-1,&matrix,visited_points,sum);
     }
-    if above != 9{
-        *sum+=1;
-        check_recursiv(x,y-1,&matrix,visited_points,sum);
-    }
-
-    let mut bellow:u32 = 9;
     if y < matrix.len()-1{
-        let be_string = format!("{}-{}",y+1,x);
-        bellow = if visited_points.contains(&be_string) {9} else {matrix[y+1][x]};
-        visited_points.push(be_string);
+        check_point(x,y+1,&matrix,visited_points,sum);
     }
-    if bellow != 9{
-        *sum+=1;
-        check_recursiv(x,y+1,&matrix,visited_points,sum);
-    }
-
-    let mut left:u32 = 9;
     if x > 0{
-        let le_string = format!("{}-{}",y,x-1);
-        left = if visited_points.contains(&le_string) {9} else {matrix[y][x-1]};
-        visited_points.push(le_string);
+        check_point(x-1,y,&matrix,visited_points,sum);
     }
-    
-    if left != 9{
-        *sum+=1;
-        check_recursiv(x-1,y,&matrix,visited_points,sum);
-    }
-
-    let mut right:u32 = 9;
     if x < matrix[y].len()-1{
-        let ri_string = format!("{}-{}",y,x+1);
-        right = if visited_points.contains(&ri_string) {9} else {matrix[y][x+1]};
-        visited_points.push(ri_string);
-    }
-
-    if right != 9{
-        *sum+=1;
-        check_recursiv(x+1,y,&matrix,visited_points,sum);
+        check_point(x+1,y,&matrix,visited_points,sum);
     }
 }
 
